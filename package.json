@@ -1,28 +1,26 @@
 {
 	"name": "preact-typescript-webpack4-boilerplate",
 	"version": "1.0.0",
-	"description": "Preact training app",
+	"description": "Alena auth",
 	"scripts": {
-		"build": "npm run clean && webpack --config ./webpack.config.js --mode production --progress",
-		"dev": "npm run clean && webpack --config ./webpack.config.js --mode development",
+		"build": "webpack --config ./webpack.config.js --mode production --progress",
+		"dev": "yarn clean && webpack --config ./webpack.config.js --mode development",
 		"start": "webpack-dev-server --config ./webpack.config.js --mode development",
 		"clean": "rimraf ./dist"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/lexey111/preact-typescript-webpack4-boilerplate.git"
+		"url": "git+https://github.com/fasderq/alena-facebook-login.git"
 	},
 	"keywords": [
 		"preact",
 		"typescript",
-		"less",
-		"boilerplate",
 		"webpack 4"
 	],
 	"alias": {
 		"preact": "./node_modules/preact/dist/preact.min.js"
 	},
-	"author": "lexey111 <lexey111@gmail.com>",
+	"author": "faderq <fasderq@gmial.com>",
 	"license": "ISC",
 	"dependencies": {
 		"isomorphic-unfetch": "^3.0.0",
@@ -45,9 +43,10 @@
 		"sass-loader": "^7.1.0",
 		"style-loader": "^0.23.1",
 		"ts-loader": "^4.4.2",
+		"tslint": "^5.13.0",
 		"typescript": "^2.9.2",
 		"webpack": "^4.16.3",
-		"webpack-cli": "^3.1.0",
+		"webpack-cli": "^3.2.3",
 		"webpack-dev-server": "^3.1.5"
 	}
 }

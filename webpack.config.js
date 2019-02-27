@@ -1,8 +1,12 @@
+const webpack = require('webpack');
+
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 // const CleanCSSPlugin = require('less-plugin-clean-css');
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+const isProduction = (process.env.NODE_ENV === 'production');
 
 
 module.exports = (env, args) => {
@@ -112,6 +116,9 @@ module.exports = (env, args) => {
 			https: true
 		},
 		plugins: [
+			new webpack.DefinePlugin({
+				'PRODUCTION': JSON.stringify(isProduction)
+			}),
 			new ForkTsCheckerWebpackPlugin(),
 			new CopyWebpackPlugin([
 				// static files to the site root folder (index and robots)
