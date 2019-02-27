@@ -1,9 +1,6 @@
 import { Component, h } from 'preact';
-// import url = require('url');
-// import queryString = require('query-string');
 import * as url from 'url';
 import * as queryString from 'query-string';
-
 
 
 

@@ -1,5 +1,6 @@
 import { Component, h } from 'preact';
 import { FacebookLogin } from '../facebook';
+import * as image from '../../images/alena.png';
 
 
 type AuthStatus = 'ok' | 'prepared' | 'fail';
@@ -45,7 +46,7 @@ export class AlenaAuth extends Component<{}, AuthState>{
             <div className='alenaContainer'>
                 <div className='alenaBox'>
                     <div className='alenaCenter'>
-                        <img className='alenaImage' src='/alena.png' />
+                        <img className='alenaImage' src={image} />
                         <div className='alenaText'>{this.getContent(this.state.status)}</div>
                     </div>
                     {

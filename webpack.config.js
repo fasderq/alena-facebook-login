@@ -1,12 +1,15 @@
 const webpack = require('webpack');
-
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-// const CleanCSSPlugin = require('less-plugin-clean-css');
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-const isProduction = (process.env.NODE_ENV === 'production');
+require('dotenv').config('.env');
+
+// process.env.NODE_ENV = process.env.WEBPACK_MODE;
+const isProduction = process.env.NODE_ENV === 'production';
 
 
 module.exports = (env, args) => {
@@ -19,41 +22,28 @@ module.exports = (env, args) => {
 		console.log('== Development mode');
 	}
 
-	// const lessLoader = production
-	// 	? {
-	// 		loader: 'less-loader',
-	// 		options: {
-	// 			plugins: [
-	// 				new CleanCSSPlugin({advanced: true})
-	// 			]
-	// 		}
-	// 	}
-	// 	: {
-	// 		loader: 'less-loader',
-	// 	};
-
 	return {
 		entry: {
-			'scripts/main': './src/bootstrap.tsx',
+			main: './src/bootstrap.tsx'
 		},
 		output: {
-			path: path.resolve('./dist'),
+			filename: '[name].js',
+			path: __dirname + '/dist'
 		},
 		target: 'web',
 		devtool: production ? false : 'source-map',
-		optimization: {
-			splitChunks: {
-				// always create vendor.js
-				cacheGroups: {
-					vendor: {
-						test: /[\\/]node_modules[\\/]/,
-						name: 'scripts/vendor',
-						chunks: 'initial',
-						enforce: true,
-					},
-				},
-			},
-		},
+		// optimization: {
+		// 	splitChunks: {
+		// 		cacheGroups: {
+		// 			vendor: {
+		// 				test: /[\\/]node_modules[\\/]/,
+		// 				name: 'js/vendor',
+		// 				chunks: 'initial',
+		// 				enforce: true,
+		// 			},
+		// 		},
+		// 	},
+		// },
 		resolve: {
 			extensions: ['.ts', '.tsx', '.js', '.html', '.txt'],
 		},
@@ -69,41 +59,32 @@ module.exports = (env, args) => {
 						},
 					}],
 				},
-				// app main .less file
-				// {
-				// 	test: /app\.less$/i,
-				// 	use: [
-				// 		{
-				// 			loader: 'file-loader',
-				// 			options: {
-				// 				name: 'styles/app/[name].css',
-				// 			}
-
-				// 		},
-				// 		lessLoader
-				// 	]
-				// },
-
-				//sass loader
-
 				{
-					test: /app\.scss$/i,
+					test: /\.(sa|sc|c)ss$/,
 					use: [
-						// fallback to style-loader in development
-						process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
-						"css-loader",
-						"sass-loader"
+
+						{
+							loader: process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader
+						}, {
+							loader: "css-loader"
+						}, {
+							loader: "sass-loader"
+						}
 					]
 				},
-				// {
-				// 	test: /\.(png|jpg|gif)$/,
-				// 	use: [
-				// 		{
-				// 			loader: 'file-loader',
-				// 			options: {},
-				// 		},
-				// 	],
-				// },
+				{
+					test: /\.(png|jpg|gif)$/,
+					exclude: /node_modules/,
+					use: [
+						{
+							loader: 'file-loader',
+							options: {
+								limit: 10000,
+								name: '[path][name].[ext]?[hash:base64:5]'
+							}
+						}]
+				},
+
 			],
 		},
 		devServer: {
@@ -119,21 +100,22 @@ module.exports = (env, args) => {
 			new webpack.DefinePlugin({
 				'PRODUCTION': JSON.stringify(isProduction)
 			}),
+			new HtmlWebpackPlugin({
+				template: './src/static/index.html'
+			}),
 			new ForkTsCheckerWebpackPlugin(),
-			new CopyWebpackPlugin([
-				// static files to the site root folder (index and robots)
-				{
-					from: './src/static/**/*',
-					to: path.resolve('./dist/'),
-					toType: 'dir',
-					flatten: true
-				},
-			]),
+			// new CopyWebpackPlugin([
+			// 	// static files to the site root folder (index and robots)
+			// 	{
+			// 		from: './src/static/**/*',
+			// 		to: path.resolve('./dist/'),
+			// 		toType: 'dir',
+			// 		flatten: true
+			// 	},
+			// ]),
 			new MiniCssExtractPlugin({
-				// Options similar to the same options in webpackOptions.output
-				// both options are optional
-				filename: 'app/[name].css',
-				chunkFilename: 'app/[id].css'
+				filename: '[name].css',
+				chunkFilename: '[id].css'
 			})
 		],
 	};
